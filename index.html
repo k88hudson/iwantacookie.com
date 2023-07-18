@@ -60,6 +60,14 @@
     }
 
   </style>
+   <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-966217903"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-966217903');
+  </script>
 </head>
 <body>
   <div class="space"></div>
@@ -69,6 +77,13 @@
   <script>
     const button = document.getElementById("i-want-cookie");
     const container = document.getElementById("cookie-container");
+
+    function onConversion(url) {
+      if (typeof(url) != 'undefined') {
+        window.location = url;
+      }
+    }
+
     function addCookie() {
       const el = document.createElement('img');
       el.setAttribute("src", "space-cookie.png")
@@ -83,16 +98,14 @@
       el.style.top = randomY + 'px';
 
       container.appendChild(el);
+
+      gtag('event', 'conversion', {
+        'send_to': 'AW-966217903/3SazCOy7h70YEK-h3cwD',
+        'event_callback': onConversion
+      });
     }
-    button.addEventListener("click", addCookie)
-  </script>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-966217903"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'AW-966217903');
+
+    button.addEventListener("click", addCookie);
   </script>
 </body>
 </html>
