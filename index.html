@@ -68,6 +68,12 @@
     gtag('js', new Date());
     gtag('config', 'AW-966217903');
   </script>
+  <script type="text/javascript">
+    var _iub = _iub || [];
+    _iub.csConfiguration = {"askConsentAtCookiePolicyUpdate":true,"enableLgpd":true,"enableUspr":true,"floatingPreferencesButtonDisplay":"bottom-right","lang":"en","perPurposeConsent":true,"usprApplies":true,"whitelabel":false,"cookiePolicyId":82727414,"siteId":3236879, "banner":{ "acceptButtonDisplay":true,"closeButtonDisplay":false,"customizeButtonDisplay":true,"explicitWithdrawal":true,"listPurposes":true,"position":"float-top-center","rejectButtonDisplay":true }};
+  </script>
+  <script type="text/javascript" src="//cdn.iubenda.com/cs/gpp/stub.js"></script>
+  <script type="text/javascript" src="//cdn.iubenda.com/cs/iubenda_cs.js" charset="UTF-8" async></script>
 </head>
 <body>
   <div class="space"></div>
@@ -75,6 +81,8 @@
      <button id="i-want-cookie">I want a cookie</button>
   </div>
   <script>
+    const COOKIE_COUNT_NAME = "cookieCount";
+    let cookieCount = 0;
     const button = document.getElementById("i-want-cookie");
     const container = document.getElementById("cookie-container");
 
@@ -85,7 +93,25 @@
       // }
     }
 
-    function addCookie() {
+    function readCookieCount() {
+      const name = COOKIE_COUNT_NAME + "=";
+      const cookieArray = decodeURIComponent(document.cookie).split("; ");
+      for (const part of cookieArray) {
+        if (part.indexOf(name) === 0) {
+          return +part.substring(name.length);
+        }
+      }
+      return 0;
+    }
+
+    function createCountCookie(expDays) {
+      let date = new Date();
+      date.setTime(date.getTime() + (expDays * 24 * 60 * 60 * 1000));
+      const expires = "expires=" + date.toUTCString();
+      document.cookie = `${COOKIE_COUNT_NAME}=${cookieCount}; ${expires}; path=/`;
+    }
+
+    function renderCookie() {
       const el = document.createElement('img');
       el.setAttribute("src", "space-cookie.png")
       el.classList.add("cookie")
@@ -99,14 +125,28 @@
       el.style.top = randomY + 'px';
 
       container.appendChild(el);
+    }
+
+    window.addEventListener("load", () => {
+      cookieCount = readCookieCount();
+      console.log(`The cookie count is ${cookieCount}`);
+      if (cookieCount) {
+        for (let i = 0; i < Math.min(cookieCount, 10); i++) {
+          renderCookie();
+        }
+      }
+    });
+
+    button.addEventListener("click", () => {
+      cookieCount++;
+      renderCookie();
+      createCountCookie();
 
       gtag('event', 'conversion', {
         'send_to': 'AW-966217903/3SazCOy7h70YEK-h3cwD',
         'event_callback': onConversion
       });
-    }
-
-    button.addEventListener("click", addCookie);
+    });
   </script>
 </body>
 </html>
